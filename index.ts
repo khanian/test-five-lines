@@ -120,24 +120,10 @@ function moveVertical(dy: number) {
   }
 }
 
-function handleInput(input: Input) {
-  input.handle();
-// if (input.isLeft())
-//   moveHorizontal(-1);
-// else if (input.isRight())
-//   moveHorizontal(1);
-// else if (input.isUp())
-//   moveVertical(-1);
-// else if (input.isDown())
-//   moveVertical(1);
-}
-
 function handleInputs() {
   while (inputs.length > 0) {
-    let current = inputs.pop();
-    //handleInput(current);
-    current.handle();
-    
+    let input = inputs.pop();
+    input.handle();
   }
 }
 
