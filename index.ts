@@ -149,6 +149,36 @@ class FallingBox implements Tile2 {
   isLock2() { return false;}
 }
 
+class Key1 implements Tile2 {
+  isAir() { return false; }
+  isFlux() { return false;}
+  isUnbreakable() { return false;}
+  isPlayer() { return false;}
+  isStone() { return false;}
+  isFallingStone() { return false;}
+  isBox() { return false;}
+  isFallingBox() { return false;}
+  isKey1() { return true;}
+  isLock1() { return false;}
+  isKey2() { return false;}
+  isLock2() { return false;}
+}
+
+class Lock1 implements Tile2 {
+  isAir() { return false; }
+  isFlux() { return false;}
+  isUnbreakable() { return false;}
+  isPlayer() { return false;}
+  isStone() { return false;}
+  isFallingStone() { return false;}
+  isBox() { return false;}
+  isFallingBox() { return false;}
+  isKey1() { return false;}
+  isLock1() { return true;}
+  isKey2() { return false;}
+  isLock2() { return false;}
+}
+
 class Key2 implements Tile2 {
   isAir() { return false; }
   isFlux() { return false;}
@@ -264,10 +294,10 @@ function moveHorizontal(dx: number) {
     map[playery][playerx + dx + dx] = map[playery][playerx + dx];
     moveToTile(playerx + dx, playery);
   } else if (map[playery][playerx + dx].isKey1()) {
-    remove(RawTile.LOCK1);
+    remove(new Lock1());
     moveToTile(playerx + dx, playery);
   } else if (map[playery][playerx + dx].isKey2()) {
-    remove(RawTile.LOCK2);
+    remove(new Lock2());
     moveToTile(playerx + dx, playery);
   }
 }
@@ -277,10 +307,10 @@ function moveVertical(dy: number) {
     || map[playery + dy][playerx].isAir()) {
     moveToTile(playerx, playery + dy);
   } else if (map[playery + dy][playerx].isKey1()) {
-    remove(RawTile.LOCK1);
+    remove(new Lock1());
     moveToTile(playerx, playery + dy);
   } else if (map[playery + dy][playerx].isKey2()) {
-    remove(RawTile.LOCK2);
+    remove(new Lock2());
     moveToTile(playerx, playery + dy);
   }
 }
