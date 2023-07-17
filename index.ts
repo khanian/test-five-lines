@@ -135,7 +135,8 @@ function handleInput(input: Input) {
 function handleInputs() {
   while (inputs.length > 0) {
     let current = inputs.pop();
-    handleInput(current);
+    //handleInput(current);
+    current.handle();
     
   }
 }
