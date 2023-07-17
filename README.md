@@ -1,4 +1,4 @@
-# five-lines
+# test-five-lines
 
 In this kata your task is to refactor the code for a small game. When finished it should be easy to add new tile types, or make the key draw as a circle, so we can easily distinguish it from the lock. 
 
