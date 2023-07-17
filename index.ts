@@ -18,39 +18,44 @@ enum RawInput {
   UP, DOWN, LEFT, RIGHT
 }
 
-interface Input2 {
+interface Input {
   isRight(): boolean;
   isLeft(): boolean;
   isUp(): boolean;
   isDown(): boolean;
+  handle(): void;
 }
 
-class Right implements Input2 {
+class Right implements Input {
   isRight() { return true;}
   isLeft() { return false;}
   isUp(): boolean { return false;}
   isDown(): boolean { return false;}
+  handle() { moveHorizontal(1); }
 }
 
-class Left implements Input2 {
+class Left implements Input {
   isRight() { return false;}
   isLeft() { return true;}
   isUp(): boolean { return false;}
   isDown(): boolean { return false;}
+  handle() { moveHorizontal(-1); }
 }
 
-class Up implements Input2 {
+class Up implements Input {
   isRight() { return false;}
   isLeft() { return false;}
   isUp(): boolean { return true;}
   isDown(): boolean { return false;}
+  handle() { moveVertical(-1); }
 }
 
-class Down implements Input2 {
+class Down implements Input {
   isRight() { return false;}
   isLeft() { return false;}
   isUp(): boolean { return false;}
   isDown(): boolean { return true;}
+  handle() { moveVertical(1); }
 }
 
 let playerx = 1;
@@ -64,7 +69,7 @@ let map: Tile[][] = [
   [2, 2, 2, 2, 2, 2, 2, 2],
 ];
 
-let inputs: Input2[] = [];
+let inputs: Input[] = [];
 
 function remove(tile: Tile) {
   for (let y = 0; y < map.length; y++) {
@@ -115,7 +120,7 @@ function moveVertical(dy: number) {
   }
 }
 
-function handleInput(input: Input2) {
+function handleInput(input: Input) {
 if (input.isLeft())
   moveHorizontal(-1);
 else if (input.isRight)
