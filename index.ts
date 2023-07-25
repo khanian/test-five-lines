@@ -3,9 +3,9 @@ const TILE_SIZE = 30;
 const FPS = 30;
 const SLEEP = 1000 / FPS;
 
-enum FallingState2 {
-  FALLING, RESTING
-}
+// enum FallingState2 {
+//   FALLING, RESTING
+// }
 
 interface FallingState {
   isFalling(): boolean;
@@ -67,7 +67,7 @@ class Air implements Tile {
   moveHorizontal(dx: number)  {
     moveToTile(playerx + dx, playery);
   }  
-  moveVertical(dy: number)  {
+  moveVertical(dy: number) {
     moveToTile(playerx, playery + dy);
   }
   isStony() { return false;}
@@ -89,7 +89,7 @@ class Flux implements Tile {
   moveHorizontal(dx: number)  {
     moveToTile(playerx + dx, playery);
   }
-  moveVertical(dy: number)  {
+  moveVertical(dy: number) {
     moveToTile(playerx, playery + dy);
   } 
   isStony() { return false;}
@@ -109,7 +109,7 @@ class Unbreakable implements Tile {
   isEdible() { return false;}
   isPushable() { return false;}
   moveHorizontal(dx: number) {} 
-  moveVertical(dy: number)  {}
+  moveVertical(dy: number) {}
   isStony() { return false;}
   isBoxy() { return false;}
 }
@@ -124,7 +124,7 @@ class Player implements Tile {
   isEdible() { return false;}
   isPushable() { return false;}
   moveHorizontal(dx: number) {} 
-  moveVertical(dy: number)  {}
+  moveVertical(dy: number) {}
   isStony() { return false;}
   isBoxy() { return false;}
 }
@@ -144,23 +144,17 @@ class Stone implements Tile {
   isPushable() { return true;}
   moveHorizontal(dx: number) {
     this.falling.moveHorizontal(this, dx);
-    // if (this.isFallingStone() === false) {
-    //   if (map[playery][playerx + dx + dx].isAir()
-    //   && !map[playery + 1][playerx + dx].isAir()) {
-    //     map[playery][playerx + dx + dx] = this;
-    //     moveToTile(playerx + dx, playery);
-    //   }
-    // } else if (this.isFallingStone() === true) {}
   }
-  moveVertical(dy: number)  {}
+  moveVertical(dy: number) {}
   isStony() { return true;}
   isBoxy() { return false;}
 }
 
 class Box implements Tile {
+  constructor(private falling: FallingState) {}
   isAir() { return false; }
   isFallingStone() { return false;}
-  isFallingBox() { return false;}
+  isFallingBox() { return this.falling.isFalling();}
   isLock1() { return false;}
   isLock2() { return false;}
   draw(g: CanvasRenderingContext2D, x: number, y: number) {
@@ -170,34 +164,30 @@ class Box implements Tile {
   isEdible() { return false;}
   isPushable() { return true;}
   moveHorizontal(dx: number) {
-    if (map[playery][playerx + dx + dx].isAir()
-    && !map[playery + 1][playerx + dx].isAir()) {
-      map[playery][playerx + dx + dx] = this;
-      moveToTile(playerx + dx, playery);
-    }
+    this.falling.moveHorizontal(this, dx);
   }
-  moveVertical(dy: number)  {}
+  moveVertical(dy: number) {}
   isStony() { return false;}
   isBoxy() { return true;}
 }
 
-class FallingBox implements Tile {
-  isAir() { return false; }
-  isFallingStone() { return false;}
-  isFallingBox() { return true;}
-  isLock1() { return false;}
-  isLock2() { return false;}
-  draw(g: CanvasRenderingContext2D, x: number, y: number) {
-    g.fillStyle = "#8b4513";
-    g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-  }
-  isEdible() { return false;}
-  isPushable() { return false;}
-  moveHorizontal(dx: number) {} 
-  moveVertical(dy: number)  {}
-  isStony() { return false;}
-  isBoxy() { return true;}
-}
+// class FallingBox implements Tile {
+//   isAir() { return false; }
+//   isFallingStone() { return false;}
+//   isFallingBox() { return true;}
+//   isLock1() { return false;}
+//   isLock2() { return false;}
+//   draw(g: CanvasRenderingContext2D, x: number, y: number) {
+//     g.fillStyle = "#8b4513";
+//     g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+//   }
+//   isEdible() { return false;}
+//   isPushable() { return false;}
+//   moveHorizontal(dx: number) {} 
+//   moveVertical(dy: number) {}
+//   isStony() { return false;}
+//   isBoxy() { return true;}
+// }
 
 class Key1 implements Tile {
   isAir() { return false; }
@@ -236,7 +226,7 @@ class Lock1 implements Tile {
   isEdible() { return false;}
   isPushable() { return false;}
   moveHorizontal(dx: number) {} 
-  moveVertical(dy: number)  {}
+  moveVertical(dy: number) {}
   isStony() { return false;}
   isBoxy() { return false;}
 }
@@ -278,7 +268,7 @@ class Lock2 implements Tile {
   isEdible() { return false;}
   isPushable() { return false;}
   moveHorizontal(dx: number) {} 
-  moveVertical(dy: number)  {}
+  moveVertical(dy: number) {}
   isStony() { return false;}
   isBoxy() { return false;}
 }
@@ -352,8 +342,8 @@ function transformTile(tile: RawTile) {
     case RawTile.PLAYER: return new Player();
     case RawTile.STONE: return new Stone(new Resting());
     case RawTile.FALLING_STONE: return new Stone(new Falling());
-    case RawTile.BOX: return new Box();
-    case RawTile.FALLING_BOX: return new FallingBox();
+    case RawTile.BOX: return new Box(new Resting());
+    case RawTile.FALLING_BOX: return new Box(new Falling());
     case RawTile.KEY1: return new Key1();
     case RawTile.LOCK1: return new Lock1();
     case RawTile.KEY2: return new Key2();
@@ -423,12 +413,12 @@ function updateTile(x: number, y: number) {
     map[y][x] = new Air();
   } else if (map[y][x].isBoxy()
     && map[y + 1][x].isAir()) {
-    map[y + 1][x] = new FallingBox();
+    map[y + 1][x] = new Box(new Falling());
     map[y][x] = new Air();
   } else if (map[y][x].isFallingStone()) {
     map[y][x] = new Stone(new Resting());
   } else if (map[y][x].isFallingBox()) {
-    map[y][x] = new Box();
+    map[y][x] = new Box(new Resting());
   }
 }
 
