@@ -171,24 +171,6 @@ class Box implements Tile {
   isBoxy() { return true;}
 }
 
-// class FallingBox implements Tile {
-//   isAir() { return false; }
-//   isFallingStone() { return false;}
-//   isFallingBox() { return true;}
-//   isLock1() { return false;}
-//   isLock2() { return false;}
-//   draw(g: CanvasRenderingContext2D, x: number, y: number) {
-//     g.fillStyle = "#8b4513";
-//     g.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-//   }
-//   isEdible() { return false;}
-//   isPushable() { return false;}
-//   moveHorizontal(dx: number) {} 
-//   moveVertical(dy: number) {}
-//   isStony() { return false;}
-//   isBoxy() { return true;}
-// }
-
 class Key1 implements Tile {
   isAir() { return false; }
   isFallingStone() { return false;}
